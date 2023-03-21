@@ -11,8 +11,8 @@ class MaterialManager(models.Manager):
             raise Http404
         return vote
 
-    def search_by_title(self, title):
-        return self.filter(title__contains=title)
+    def search_by_name(self, name: str):
+        return self.filter(name__contains=name)
 
     def get_all_in_range(self, start: int, end: int):
         result = self.all()
@@ -22,35 +22,35 @@ class MaterialManager(models.Manager):
 
 
 class Material(models.Model):
-    title = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     description = models.TextField()
     image = models.ImageField(blank=True, null=True, upload_to="images/")
 
     objects = MaterialManager()
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
-class GamenManager(models.Manager):
+class GameManager(models.Manager):
     def find_by_id(self, id: int):
         try:
-            vote = self.get(pk=id)
+            vote = self.filter(id__exact=id)
         except ObjectDoesNotExist:
             raise Http404
         return vote
 
-    def search_by_title(self, title: str):
-        return self.filter(title__contains=title)
+    def search_by_name(self, name: str):
+        return self.filter(name__contains=name)
 
 
 class Game(models.Model):
-    title = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     description = models.TextField()
     image = models.ImageField(blank=True, null=True, upload_to="images/")
     materials = models.ManyToManyField(Material)
 
-    objects = GamenManager()
+    objects = GameManager()
 
     def __str__(self):
-        return self.title
+        return self.name
