@@ -1,11 +1,9 @@
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse, Http404
-from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from . import models
-from . import serializers
+
+from . import serializers, models
 
 
 def get_image(request, name: str):
