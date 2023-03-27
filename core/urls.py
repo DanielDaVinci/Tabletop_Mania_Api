@@ -24,6 +24,6 @@ urlpatterns = [
     path('get/materials/start/<int:start>/end/<int:end>', views.materials_get_range),
     path('get/material/id/<int:id>', views.material_get_by_id),
     path('get/game/id/<int:id>', views.game_get_by_id),
-    path('uploads/images/<str:name>', views.get_image),
+    # path('uploads/images/<str:name>', views.get_image),
     # Post
 ]

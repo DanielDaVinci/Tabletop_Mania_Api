@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'App.apps.AppConfig',
     'rest_framework',
     'django_cleanup',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -118,11 +119,33 @@ USE_TZ = True
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+USE_S3 = os.getenv('USE_S3') == 'TRUE'
 
-MEDIA_ROOT = BASE_DIR / 'uploads/'
-MEDIA_URL = '/uploads/'
+if USE_S3:
+    # aws settings
+    AWS_ACCESS_KEY_ID = os.getenv('uGNwnGMMKyXgPyjNQSzJao')
+    AWS_SECRET_ACCESS_KEY = os.getenv('y9MyZz46FkzyZBrvNgb2wTDT9NTGrxPd3S3hXBYLjaX')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('tabletop_mania_bucket')
+    AWS_DEFAULT_ACL = 'public-read-write'
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.hb.bizmrg.com'
+    # AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    # s3 static settings
+    AWS_LOCATION = 'static'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    # s3 public media settings
+    PUBLIC_MEDIA_LOCATION = 'media'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
+    DEFAULT_FILE_STORAGE = 'storage_backends.PublicMediaStorage'
+else:
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

@@ -16,8 +16,6 @@ class MaterialSerializer(serializers.ModelSerializer):
 
 
 class GameSerializer(serializers.ModelSerializer):
-    # if will need output whole material
-    # materials = MaterialSerializer(read_only=True, many=True)
 
     class Meta:
         model = Game
