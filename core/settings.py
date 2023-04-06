@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
+import boto3
 import dj_database_url
 from dotenv import load_dotenv
 
@@ -42,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'App.apps.AppConfig',
     'rest_framework',
-    'django_cleanup',
+    's3direct',
     'storages',
 ]
 
@@ -62,8 +63,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,33 +119,25 @@ USE_TZ = True
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
 USE_S3 = os.getenv('USE_S3') == 'TRUE'
 
 if USE_S3:
-    # aws settings
-    AWS_ACCESS_KEY_ID = os.getenv('uGNwnGMMKyXgPyjNQSzJao')
-    AWS_SECRET_ACCESS_KEY = os.getenv('y9MyZz46FkzyZBrvNgb2wTDT9NTGrxPd3S3hXBYLjaX')
-    AWS_STORAGE_BUCKET_NAME = os.getenv('tabletop_mania_bucket')
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+    AWS_DEFAULT_REGION = 'ru-msk'
     AWS_DEFAULT_ACL = 'public-read-write'
+    AWS_S3_ENDPOINT_URL = 'https://hb.bizmrg.com'
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.hb.bizmrg.com'
-    # AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-    # s3 static settings
-    AWS_LOCATION = 'static'
-    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    # s3 public media settings
     PUBLIC_MEDIA_LOCATION = 'media'
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
-    DEFAULT_FILE_STORAGE = 'storage_backends.PublicMediaStorage'
+    DEFAULT_FILE_STORAGE = 'core.storage_backends.PublicMediaStorage'
 else:
-    STATIC_URL = '/static/'
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-
     MEDIA_URL = '/media/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
-
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

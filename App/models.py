@@ -1,7 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.http import Http404
-from core.storage_backends import PublicMediaStorage
+
+from core import storage_backends
 
 
 class MaterialManager(models.Manager):
@@ -25,7 +26,7 @@ class MaterialManager(models.Manager):
 class Material(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
-    image = models.ImageField(blank=True, null=True, storage=PublicMediaStorage())
+    image = models.FileField(storage=storage_backends.MaterialStorage, blank=True, null=True)
 
     objects = MaterialManager()
 
@@ -48,15 +49,10 @@ class GameManager(models.Manager):
 class Game(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
-    image = models.ImageField(blank=True, null=True, storage=PublicMediaStorage())
+    image = models.ImageField(storage=storage_backends.GameStorage, blank=True, null=True)
     materials = models.ManyToManyField(Material)
 
     objects = GameManager()
 
     def __str__(self):
         return self.name
-
-
-class Upload(models.Model):
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-    file = models.FileField(storage=PublicMediaStorage())

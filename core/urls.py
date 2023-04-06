@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from App import views
 
@@ -24,6 +24,6 @@ urlpatterns = [
     path('get/materials/start/<int:start>/end/<int:end>', views.materials_get_range),
     path('get/material/id/<int:id>', views.material_get_by_id),
     path('get/game/id/<int:id>', views.game_get_by_id),
-    # path('uploads/images/<str:name>', views.get_image),
+    path('s3direct/', include('s3direct.urls'))
     # Post
 ]
