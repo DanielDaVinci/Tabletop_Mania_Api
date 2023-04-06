@@ -2,6 +2,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.http import Http404
 
+from core import storage_backends
+
 
 class MaterialManager(models.Manager):
     def find_by_id(self, id: int):
@@ -24,7 +26,7 @@ class MaterialManager(models.Manager):
 class Material(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
-    image = models.ImageField(blank=True, null=True, upload_to="images/")
+    image = models.FileField(storage=storage_backends.MaterialStorage, blank=True, null=True)
 
     objects = MaterialManager()
 
@@ -47,7 +49,7 @@ class GameManager(models.Manager):
 class Game(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
-    image = models.ImageField(blank=True, null=True, upload_to="images/")
+    image = models.ImageField(storage=storage_backends.GameStorage, blank=True, null=True)
     materials = models.ManyToManyField(Material)
 
     objects = GameManager()
