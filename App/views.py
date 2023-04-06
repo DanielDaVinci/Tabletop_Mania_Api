@@ -1,18 +1,11 @@
-from django.http import FileResponse, Http404
+from django.core.files.storage import FileSystemStorage
+from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-
+from core import settings
 from . import serializers, models
-
-
-def get_image(request, name: str):
-    try:
-        img = open(f'uploads/images/{name}', 'rb')
-    except:
-        raise Http404
-    response = FileResponse(img)
-    return response
+from .models import Material
 
 
 @api_view(['GET'])
