@@ -28,7 +28,7 @@ services:
       - static_volume:${STATIC_STORAGE}
       - media_volume:${MEDIA_STORAGE}
     ports:
-      - "8080:8080"
+      - "1337:8080"
     depends_on:
       - db
 volumes:
