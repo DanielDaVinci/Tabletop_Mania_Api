@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+  web:
+    build: .
+    env_file:
+      - .env
+    entrypoint:
+      - ./docker-entrypoint.sh
+    volumes:
+      - .:/code
+      - static_volume:${STATIC_STORAGE}
+      - media_volume:${MEDIA_STORAGE}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+volumes:
+  static_volume:
+  media_volume:
+  pg_data:

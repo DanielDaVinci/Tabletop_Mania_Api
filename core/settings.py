@@ -24,15 +24,26 @@ load_dotenv(BASE_DIR / '.env')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
+ALLOWED_HOSTS = ['0.0.0.0',  '127.0.0.1', 'localhost',]
+
+# Application definition
+
+POSTGRES_DB = os.getenv("POSTGRES_DB")
+POSTGRES_USER = os.getenv("POSTGRES_USER")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+DBHOST = os.getenv("DBHOST")
+PGDATA = os.getenv("PGDATA")
+DATA_STORAGE = os.getenv("DATA_STORAGE")
+
+# reading .env file
+# os.environ.Env.read_env()
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', '0').lower() in ['true', 't', '1']
-
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', ' ').split()
-
-# Application definition
+DEBUG = os.getenv('DEBUG')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -81,10 +92,17 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.parse(os.environ.get('DATABASE_URL'), conn_max_age=600),
-}
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME':  POSTGRES_DB,
+        'USER': POSTGRES_USER,
+        'PASSWORD': POSTGRES_PASSWORD,
+        'HOST': DBHOST,
+        'PORT': 5432
+    }
+}
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
