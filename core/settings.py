@@ -24,7 +24,7 @@ load_dotenv(BASE_DIR / '.env')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
-ALLOWED_HOSTS = ['0.0.0.0',  '127.0.0.1', 'localhost',]
+ALLOWED_HOSTS = ['0.0.0.0',  '127.0.0.1', 'localhost', '158.160.37.110']
 
 # Application definition
 
