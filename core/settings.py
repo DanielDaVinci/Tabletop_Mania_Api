@@ -100,7 +100,7 @@ DATABASES = {
         'USER': POSTGRES_USER,
         'PASSWORD': POSTGRES_PASSWORD,
         'HOST': DBHOST,
-        'PORT': 5432
+        'PORT': 5433
     }
 }
 # Password validation
